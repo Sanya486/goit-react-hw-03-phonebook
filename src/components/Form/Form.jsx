@@ -26,7 +26,6 @@ export default class Form extends Component {
 
   submitHandler = e => {
     e.preventDefault();
-    
     const nameExp = new RegExp(
       "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
     );

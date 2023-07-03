@@ -8,7 +8,6 @@ import Contact from './Contact/Contact';
 import Filter from './Filter/Filter';
 
 export default class App extends Component {
-
   state = {
     contacts: [
       // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -19,27 +18,27 @@ export default class App extends Component {
     filter: '',
   };
 
-  componentDidMount() { 
+  componentDidMount() {
     const contacts = JSON.parse(localStorage.getItem('contacts'));
     if (contacts) {
       this.setState({ contacts: contacts });
-    }    
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contact !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+    }
   }
 
   addNewContact = (id, name, number) => {
     const isContactExist = this.state.contacts.some(contact => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase())
-    
     if (!isContactExist) {
       this.setState(prevState => {
-        const newContactsObject = [{ id, name, number }, ...prevState.contacts] 
-        localStorage.setItem('contacts', JSON.stringify(newContactsObject));
-      return {contacts : newContactsObject};
-    });
+        const newContactsObject = [{ id, name, number }, ...prevState.contacts];
+        return { contacts: newContactsObject };
+      });
     }
-    else {
-      alert('This name has already exist! Write another one!')
-    }
-   
   };
 
   onFilterChange = e => {
@@ -47,18 +46,21 @@ export default class App extends Component {
   };
 
   onActiveFilter = () => {
-    return this.state.contacts.filter(contact => contact.name.toLowerCase().includes(this.state.filter))
-  }
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter)
+    );
+  };
 
-  deleteContact = (id) => {
+  deleteContact = id => {
     this.setState(prevState => {
-      const filteredContacts = prevState.contacts.filter(contact => contact.id !== id)
-      localStorage.setItem('contacts', JSON.stringify(filteredContacts));
+      const filteredContacts = prevState.contacts.filter(
+        contact => contact.id !== id
+      );
       return {
         contacts: filteredContacts,
       };
-    })
-  }
+    });
+  };
 
   render() {
     return (
